@@ -5,13 +5,27 @@
 #include <string.h>
 #include <math.h>
 float longitude1,latitude1,longitude2,latitude2,longitude_init,latitude_init,longitude_final,latitude_final,total_dist,x;
+float degr_Rad(float deg) {
+  return deg * (3.14159265359/180);
+}
+float Distance(float latI,float lonI,float latF,float lonF)
+    {
+  int R = 6371; // Radius of the earth in km
+  float dLat = degr_Rad(latF-latI);
+  float dLon = degr_Rad(lonF-lonI);
+  float a = sin(dLat/2) * sin(dLat/2) +
+          cos(degr_Rad(latI)) * cos(degr_Rad(latF)) *
+          sin(dLon/2) * sin(dLon/2);
+  float c = 2 * atan2(sqrt(a),sqrt(1-a));
+  float d = R * c; // Distance in km
+    return d ;
+}
+
 char* GET_NMEA(void){
          int i;
      char str[30] = {0};
                 while(1)
-            {
-
-                for (i=0; i<6; i++)
+            {   for (i=0; i<6; i++)
                 {
                 while ((UART1_FR_R & 0x40) != 1){} //wait until Rx FIFO is full
                 str[i] = UART1_DR_R;
