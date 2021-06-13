@@ -5,6 +5,30 @@
 #include <string.h>
 #include <math.h>
 float longitude1,latitude1,longitude2,latitude2,longitude_init,latitude_init,longitude_final,latitude_final,total_dist,x;
+char* GET_NMEA(void){
+         int i;
+     char str[30] = {0};
+                while(1)
+            {
+
+                for (i=0; i<6; i++)
+                {
+                while ((UART1_FR_R & 0x40) != 1){} //wait until Rx FIFO is full
+                str[i] = UART1_DR_R;
+                }//$Gpxxx
+if (strcmp(str, "$GPRMC") == 0){
+   break;}
+}
+i = 6;
+while (UART1_DR_R != '$')
+{
+    while ((UART1_FR_R & 0x40) != 1){} //wait until Rx FIFO is full
+            str[i] = UART1_DR_R;
+            i++;
+        }
+
+return str;
+}
 
 int main(){
         initial();
