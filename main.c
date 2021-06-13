@@ -5,6 +5,14 @@
 #include <string.h>
 #include <math.h>
 float longitude1,latitude1,longitude2,latitude2,longitude_init,latitude_init,longitude_final,latitude_final,total_dist,x;
+float act_coordinate(float coordinate)
+{
+    float d =coordinate/100; //2832.1834/100 =28.321834
+int degree_part= d;//28
+float minuite_part = (coordinate-(degree_part*100) )/60;
+float fixvalue= degree_part+minuite_part;
+return fixvalue;
+}
 float degr_Rad(float deg) {
   return deg * (3.14159265359/180);
 }
