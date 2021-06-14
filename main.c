@@ -5,6 +5,35 @@
 #include <string.h>
 #include <math.h>
 float longitude1,latitude1,longitude2,latitude2,longitude_init,latitude_init,longitude_final,latitude_final,total_dist,x;
+
+
+void UART1_Transmitter(unsigned char data){
+    while((UART1_FR_R & (1<<5)) != 0){} // wait until Tx buffer not full
+    UART1_DR_R = data;                  // before giving it another byte
+}
+
+void systick_intialization(int reload)
+{
+    NVIC_ST_CTRL_R=0; //disable timer
+    NVIC_ST_RELOAD_R=reload-1;
+    NVIC_ST_CURRENT_R =0;
+    NVIC_ST_CTRL_R = 5; //enable timer module and adjust clock of timer
+}
+void delay(int sec, char x)
+{
+    int i;
+    if (x=='m')
+    {systick_intialization(16000);}
+    else if (x == 'u')
+    {systick_intialization(16);}
+    else
+    {systick_intialization(16000000);}
+
+    for(i = 0; i< sec; i++)
+    {
+        while( (NVIC_ST_CTRL_R &= 0x10000)==0 ){}
+    }
+}
 float act_coordinate(float coordinate)
 {
     float d =coordinate/100; //2832.1834/100 =28.321834
