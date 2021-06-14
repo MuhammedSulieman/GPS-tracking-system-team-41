@@ -136,6 +136,25 @@ void initial(){
     LCD_COMMAND(0x80); //START OF FIRST LINE
     LCD_COMMAND(0x0E); //DISPLAY ON CURSOR BLINKING
 }
+void LCD_COMMAND(char COM){
+    GPIO_PORTF_DATA_R &= 0x1E ; //LCD ENABLE = 0
+    GPIO_PORTB_DATA_R &= 0xF3; //RS,RW = 0
+    GPIO_PORTF_DATA_R |= 0x01 ; //LCD ENABLE = 1
+    GPIO_PORTB_DATA_R |= (COM & 0xF0) ;//B4,B5,B6,B7 pin 4,5,6,7
+    GPIO_PORTE_DATA_R |= ((COM & 0x0F)<<2) ;//E2,E3,E4,E5
+    delay(1,'m'); //COM = 0,1,2,3,4,5,6,7 PINS
+    GPIO_PORTF_DATA_R &= 0x1E ; //LCD ENABLE = 0
+}
+void LCD_DATA(char DATA){
+    GPIO_PORTF_DATA_R &= 0x1E ; //LCD ENABLE = 0
+    GPIO_PORTB_DATA_R |= 0x04; //RS = 1
+    GPIO_PORTB_DATA_R &= 0xF7; //RW = 0
+    GPIO_PORTF_DATA_R |= 0x01 ; //LCD ENABLE = 1
+    GPIO_PORTB_DATA_R |= (DATA & 0xF0) ;
+    GPIO_PORTE_DATA_R |= ((DATA & 0x0F) <<2) ;//DATA = 0,1,2,3,4,5,6,7 PINS
+    delay(1,'m');
+    GPIO_PORTF_DATA_R &= 0x1E ; //LCD ENABLE = 0
+}
 int main(){
         initial();
         char bluetooth_data [20]={0};
